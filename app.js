@@ -48,13 +48,21 @@ app.post("/articles", function(req, res) {
     title: req.body.title,
     content: req.body.content
   });
-
   newArticle.save(function(err) {
     if (!err) {
       res.send("Successfuly added a new articles");
     } else {
       res.send(err);
     }
+  });
+});
+
+app.delete("/articles", function(req, res){
+  Article.deleteMany(function(err){
+    if(!err){
+      res.send("Successfuly delited all articles");
+    }else{
+      res.send(err);    }
   });
 });
 
