@@ -33,38 +33,39 @@ app.get("/", function(req, res) {
   res.send("Hi");
 });
 
-app.get("/articles", function(req, res) {
+app.route("/articles")
+  .get(function(req, res) {
+    Article.find(function(err, foundArticles) {
+      if (!err) {
+        res.send(foundArticles);
+      } else {
+        console.log(err);
+      }
+    });
+  })
+  .post(function(req, res) {
+    const newArticle = new Article({
+      title: req.body.title,
+      content: req.body.content
+    });
+    newArticle.save(function(err) {
+      if (!err) {
+        res.send("Successfuly added a new articles");
+      } else {
+        res.send(err);
+      }
+    });
+  })
+  .delete(function(req, res) {
+    Article.deleteMany(function(err) {
+      if (!err) {
+        res.send("Successfuly delited all articles");
+      } else {
+        res.send(err);
+      }
+    });
+  });
 
-  Article.find(function(err, foundArticles) {
-    if (!err) {
-      res.send(foundArticles);
-    } else {
-      console.log(err);
-    }
-  });
-});
-app.post("/articles", function(req, res) {
-  const newArticle = new Article({
-    title: req.body.title,
-    content: req.body.content
-  });
-  newArticle.save(function(err) {
-    if (!err) {
-      res.send("Successfuly added a new articles");
-    } else {
-      res.send(err);
-    }
-  });
-});
-
-app.delete("/articles", function(req, res){
-  Article.deleteMany(function(err){
-    if(!err){
-      res.send("Successfuly delited all articles");
-    }else{
-      res.send(err);    }
-  });
-});
 
 app.listen(3000, function(err, res) {
   console.log("Server starting on port 3000");
